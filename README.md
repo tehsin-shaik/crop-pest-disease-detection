@@ -106,3 +106,6 @@ Macro F1-score was especially important because the datasets were imbalanced.
 - Cashew classification was easier than maize classification.
 - Maize classes were more visually similar, leading to more confusion between diseases.
 - The custom CNN still performed competitively on cashew, showing that a lightweight model can learn strong crop-specific features.
+
+## Tech Stack
+Python, PyTorch, Torchvision, scikit-learn, NumPy, Matplotlib
