@@ -1,7 +1,11 @@
-# Crop Pest and Disease Detection (Maize & Cashew)
-A deep learning project for automated crop pest and disease classification from plant images, focused on **maize** and **cashew** crops.
+# Crop Pest and Disease Detection with CropDiseaseNet (Maize & Cashew)
+A PyTorch deep learning project for maize and cashew pest/disease classification from plant leaf images using a custom CNN built from scratch.
 
 ## Overview
+This project focuses on multi-class crop pest and disease classification using a manually designed convolutional neural network called CropDiseaseNet.
+
+- Separate crop mode: train one model for Maize and one for Cashew
+- Combined mode: train a single model across all Maize and Cashew classes together
 
 Early detection of crop diseases is important for improving yield, reducing financial loss, and supporting food security. Traditional diagnosis often depends on manual inspection, which can be slow, inconsistent, and difficult to scale.
 
@@ -26,25 +30,37 @@ The project uses raw crop image datasets for:
   - Leaf Blight
   - Leaf Spot
   - Streak Virus
+ 
+In combined mode, labels are prefixed with crop name, for example:
+- Cashew___Anthracnose
+- Maize___Leaf Blight
 
 ### Why raw images instead of pre-augmented data?
-Pre-augmented datasets may contain multiple transformed versions of the same original image. This increases the risk of **data leakage** if similar images appear across training, validation, and test sets, which can artificially inflate performance.
+Pre-augmented datasets can contain multiple transformed versions of the same original image. If similar images appear in both training and test splits, this can cause data leakage and inflate performance.
 
-## Approach
+To avoid this, the project uses raw images and applies augmentation only after splitting the dataset.
 
-### Preprocessing
+## Pipeline
+
+### Data Handling
+- Google Drive / Colab-compatible setup
+- Safe corrupted-image detection
+- Bad images are skipped and logged, not automatically deleted
+- Reproducible stratified 70/15/15 train/validation/test split
+- Split files saved for reproducibility
+
+### Preprocessing and Augmentation
 - Resized all images to **224 × 224**
-- Applied **ImageNet normalization**
-- Removed corrupted image files if present
+- Training-set normalization statistics computed from the dataset
+- Training augmentations include: RandomResizedCrop, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ColorJitter, RandomAffine, RandomPerspective
+RandomErasing
 
-### Data Augmentation
-Applied only to the training set:
-- Random horizontal flip
-- Random rotation (10°)
-- Color jitter
+Validation and test images use deterministic transforms only.
 
 ### Handling Class Imbalance
-Used **class-weighted cross-entropy loss** so that underrepresented classes receive higher importance during training.
+The training pipeline supports imbalance-aware learning using:
+- WeightedRandomSampler, or
+- class-weighted loss
 
 ## Models
 
@@ -100,6 +116,10 @@ Macro F1-score was especially important because the datasets were imbalanced.
 - **Maize Accuracy:** 70.91%
 
 ## Key Findings
+- The custom CNN trained from scratch performed strongly on both separate and combined tasks
+- The combined 12-class model achieved the best overall result
+
+
 
 - Transfer learning outperformed the custom CNN overall.
 - **EfficientNet-B0** was the strongest model on both crops.
@@ -108,4 +128,12 @@ Macro F1-score was especially important because the datasets were imbalanced.
 - The custom CNN still performed competitively on cashew, showing that a lightweight model can learn strong crop-specific features.
 
 ## Tech Stack
-Python, PyTorch, Torchvision, scikit-learn, NumPy, Matplotlib
+Python, PyTorch, torchvision, scikit-learn, NumPy, Matplotlib, Google Colab
+
+## How to Run
+1. Upload the dataset from https://data.mendeley.com/datasets/bwh3zbpkpv/1 to Google Drive
+2. Open the notebook in Google Colab
+3. Mount Google Drive
+4. Set the dataset path in the configuration section
+5. Run the notebook cells to train and evaluate the model
+
