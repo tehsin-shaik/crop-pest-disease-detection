@@ -1,4 +1,12 @@
 # Crop Pest and Disease Detection with CropDiseaseNet (Maize & Cashew)
+
+
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)]()
+[![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-ee4c2c.svg)]()
+[![Colab](https://img.shields.io/badge/Google%20Colab-Notebook-F9AB00.svg)]()
+[![Status](https://img.shields.io/badge/Model-Custom%20CNN%20from%20Scratch-success.svg)]()
+
+
 A PyTorch deep learning project for maize and cashew pest/disease classification from plant leaf images using a custom CNN built from scratch.
 
 ## Overview
